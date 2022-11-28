@@ -69,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity {
         if(!sEmail.matches(emailPattern)){
             email.setError("Enter correct email");
 
-        } else if (sPassword.isEmpty() || sPassword.length() < 4 ){
+        } else if (sPassword.isEmpty() || sPassword.length() < 6 ){
             password.setError("Enter proper password");
         }else if ( !sPassword.equals(sConfirmPassword)){
             confirmPassword.setError("Password not matched");
