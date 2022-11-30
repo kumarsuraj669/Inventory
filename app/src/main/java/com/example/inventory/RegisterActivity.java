@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,7 +26,6 @@ public class RegisterActivity extends AppCompatActivity {
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
     FirebaseAuth mAuth;
-    FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +38,13 @@ public class RegisterActivity extends AppCompatActivity {
         confirmPassword = findViewById(R.id.confirm_password);
         register = findViewById(R.id.r_register);
         mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
+
 
         loginHere.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity( new Intent(RegisterActivity.this, LoginActivity.class));
+                finish();
             }
         });
 
@@ -64,13 +65,18 @@ public class RegisterActivity extends AppCompatActivity {
         String sPassword = password.getText().toString();
         String sConfirmPassword = confirmPassword.getText().toString();
 
+        if(TextUtils.isEmpty(sFullName)){
+            fullName.setError("Full Name is required");
 
+        } else if(TextUtils.isEmpty(sEmail)){
+            email.setError("Email is required");
 
-        if(!sEmail.matches(emailPattern)){
+        } else if(!sEmail.matches(emailPattern)){
             email.setError("Enter correct email");
 
         } else if (sPassword.isEmpty() || sPassword.length() < 6 ){
             password.setError("Enter proper password");
+
         }else if ( !sPassword.equals(sConfirmPassword)){
             confirmPassword.setError("Password not matched");
 
@@ -84,9 +90,11 @@ public class RegisterActivity extends AppCompatActivity {
 
                     if(task.isSuccessful()){
                       Toast.makeText(RegisterActivity.this, "Sucessfully Registered", Toast.LENGTH_SHORT).show();
+                      startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                      finish();
 
                       }else{
-                           Toast.makeText(RegisterActivity.this, "Not Registered", Toast.LENGTH_SHORT).show();
+                           Toast.makeText(RegisterActivity.this, "Not Registered "+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
                           }
 
